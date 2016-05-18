@@ -7,8 +7,8 @@
 #为什么要使用Bitmap
 在数据统计工作中，我们经常遇到这样的问题，在一张统计表中，有部分指标列是可以简单求和的，但是有些列不可以，看下面的例子(假设从5月1日开放注册和充值)：
 
-| 日期     | 注册用户数 | 充值用户数|
-| -------- |:----------:|: -----:|
+| 日期    | 注册用户数 | 充值用户数|
+| -------- |:----------:|:-----:|
 | 20160501 | 2        | 1     |
 | 20160502 | 3        | 2     |
 | 20160503 | 2        | 3     |
@@ -18,7 +18,7 @@
 总的充值用户数：这时我们不能做sum了，因为这种指标是需要排重的，用户在3天内可能发生多次充值，但是在计算时是能算1此，怎么解决呢，接着往下看。
 
 | 日期     | 注册用户数 | 充值用户bitmap|
-| -------- |:----------:|: -------:|
+|----------|:----------:|:--------|
 | 20160501 | 2        | 01         |
 | 20160502 | 3        | 01010      |
 | 20160503 | 3        | 10100010   |
@@ -44,23 +44,23 @@
 
 4.	将自定义的函数加入到mysql（需要有mysql.func的insert权限）
 
-		`CREATE FUNCTION bm_count RETURNS INT SONAME 'mysql-udf-bitmap.so'`
+		CREATE FUNCTION bm_count RETURNS INT SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE FUNCTION bm_detail RETURNS STRING SONAME 'mysql-udf-bitmap.so'`
+		CREATE FUNCTION bm_detail RETURNS STRING SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE AGGREGATE FUNCTION bm RETURNS STRING SONAME 'mysql-udf-bitmap.so'`
+		CREATE AGGREGATE FUNCTION bm RETURNS STRING SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE AGGREGATE FUNCTION bm_and RETURNS STRING SONAME 'mysql-udf-bitmap.so'`
+		CREATE AGGREGATE FUNCTION bm_and RETURNS STRING SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE AGGREGATE FUNCTION bm_or RETURNS STRING SONAME 'mysql-udf-bitmap.so'`
+		CREATE AGGREGATE FUNCTION bm_or RETURNS STRING SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE AGGREGATE FUNCTION bm_and_count RETURNS INT SONAME 'mysql-udf-bitmap.so'`
+		CREATE AGGREGATE FUNCTION bm_and_count RETURNS INT SONAME 'mysql-udf-bitmap.so'
 	
-		`CREATE AGGREGATE FUNCTION bm_or_count RETURNS INT SONAME 'mysql-udf-bitmap.so'`
+		CREATE AGGREGATE FUNCTION bm_or_count RETURNS INT SONAME 'mysql-udf-bitmap.so'
 5.	函数介绍
 
-	| 函数名        | 功能                                |返回值 |
-	| -------------|:------------------------------------|: -------:|
+	| 函数名 | 功能 | 返回值 |
+	|--------------|:------------------------------------|:--------:|
 	| bm_count     |计算bitmap中1的个数                    |     INT     |
 	| bm_detail    |展示bitmap详情,将位置为1的索引按逗号分隔  |   STRING   |
 	| bm           |对原始数据生成bitmap                   |  STRING  |
