@@ -137,9 +137,13 @@ my_bool bm_count_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 
 long long bm_count(UDF_INIT *initid, UDF_ARGS *args, char *is_null, char *error)
 {
-	EWAHBoolArray<uint32_t> * bitmap = (EWAHBoolArray<uint32_t> *)initid->ptr;
-	readBitmap(args, bitmap);
-	return bitmap->numberOfOnes();
+	if (args->args[0])
+	{
+		EWAHBoolArray<uint32_t> * bitmap = (EWAHBoolArray<uint32_t> *)initid->ptr;
+		readBitmap(args, bitmap);
+		return bitmap->numberOfOnes();
+	}
+	return 0;
 }
 
 void bm_count_deinit(UDF_INIT *initid)
@@ -214,9 +218,15 @@ my_bool bm_detail_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 }
 char * bm_detail(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
 {
-	EWAHBoolArray<uint32_t> * bitmap = (EWAHBoolArray<uint32_t> *)initid->ptr;
-	readBitmap(args, bitmap);
-	std::string str = detail(bitmap);
+	std::string str; 
+	if (args->args[0])
+	{
+		EWAHBoolArray<uint32_t> * bitmap = (EWAHBoolArray<uint32_t> *)initid->ptr;
+		readBitmap(args, bitmap);
+		str = detail(bitmap);
+	} else {
+		str = "";
+	}
 	memcpy(result, str.c_str(), str.length()+1);
 	*length = str.length()+1;
 	return result;
