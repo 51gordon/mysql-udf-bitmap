@@ -58,7 +58,7 @@ extern "C" {
 	void bm_or_count_deinit(UDF_INIT *initid);
 }
 
-void debug_log(int i)
+void debug_log(uint32_t i)
 {
 	std::ofstream f;
 	f.open("/tmp/mysql-udf.log",std::ios::app);
@@ -175,7 +175,7 @@ void bm_add(UDF_INIT* initid, UDF_ARGS* args, char* is_null, char *error)
 {
 	if (args->args[0])
 	{
-		int t = *((int*) args->args[0]);
+		uint32_t t = *((int*) args->args[0]);
 		std::vector<uint32_t> * v = (std::vector<uint32_t> *)initid->ptr;
 		v->push_back(t);
 	}
@@ -186,7 +186,7 @@ char * bm(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length,
 	std::vector<uint32_t> * v = (std::vector<uint32_t> *)initid->ptr;
 	sort(v->begin(), v->end());
 	EWAHBoolArray<uint32_t> * bitmap = new EWAHBoolArray<uint32_t>;
-	int i = 0;
+	uint32_t i = 0;
   for(; i<v->size(); i++)
   {
 		bitmap->set((*v)[i]);
